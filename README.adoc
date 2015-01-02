@@ -12,16 +12,7 @@ createdb -u postgres london.meetup
 psql -U postgres -d london.meetup < data/northwind.postgre.sql
 ```
 
-View the data using pgadmin
-```
-http://www.postgresql.org/ftp/pgadmin3/release/v1.20.0/osx/
-```
-
-== View the ER diagram
-
-* Print this out and give people a copy of it when we get to this point
-* How do we generate this from pgadmin?
-
+You can then browse the data using link:http://www.postgresql.org/ftp/pgadmin3/release/v1.20.0/osx/pgadmin[pgadmin] or similar.
 
 == Export the data
 

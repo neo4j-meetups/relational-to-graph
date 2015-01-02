@@ -15,7 +15,7 @@ MATCH (supplier:Supplier {SupplierID: row.SupplierID})
 MATCH (category:Category {CategoryID: row.CategoryID})
 
 MERGE (supplier)-[:SUPPLIES]->(product)
-MERGE (product)-[:PART_OF]->(category);
+MERGE (product)-[:IN_CATEGORY]->(category);
 
 // employees + managers
 LOAD CSV WITH HEADERS FROM "file:/tmp/employees.csv" AS row

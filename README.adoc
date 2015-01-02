@@ -1,0 +1,7 @@
+= Graph to Relational
+
+== Importing Northwind into Postgres SQL
+
+```
+psql --user postgres < data/northwind.postgre.sql
+```

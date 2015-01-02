@@ -1,6 +1,11 @@
 = Graph to Relational
 
+In this session we're going to show how to take an existing relational database,
+import it into Neo4j and write some queries against it
+
 == Importing Northwind into Postgres SQL
+
+We'll use the classic link:https://code.google.com/p/northwindextended/downloads/detail?name=northwind.postgre.sql[Northwind dataset] as our example
 
 ```
 createdb -u postgres london.meetup
@@ -25,44 +30,5 @@ http://www.postgresql.org/ftp/pgadmin3/release/v1.20.0/osx/
 == Import the data
 
 * link:data/import/nodes.cql[Nodes]
-
-```
-CREATE INDEX ON :Product(ProductID);
-CREATE INDEX ON :Category(CategoryID);
-CREATE INDEX ON :Employee(EmployeeID);
-CREATE INDEX ON :Supplier(SupplierID);
-CREATE INDEX ON :Customer(CustomerID);
-```
-
-```
-LOAD CSV WITH HEADERS FROM "file:/tmp/orders.csv" AS row
-CREATE (order:Order {OrderID: row.OrderID, ShipName: row.ShipName})
-
-WITH *
-MATCH (product:Product {ProductID: row.ProductID})
-MATCH (employee:Employee {EmployeeID: row.EmployeeID})
-
-MERGE (employee)-[:SOLD]->(order)
-MERGE (order)-[:PRODUCT]->(product);
-```
-
-```
-LOAD CSV WITH HEADERS FROM "file:/tmp/products.csv" AS row
-MATCH (product:Product {ProductID: row.ProductID})
-MATCH (supplier:Supplier {SupplierID: row.SupplierID})
-MATCH (category:Category {CategoryID: row.CategoryID})
-
-MERGE (supplier)-[:SUPPLIES]->(product)
-MERGE (product)-[:PART_OF]->(category);
-```
-
-```
-LOAD CSV WITH HEADERS FROM "file:/tmp/employees.csv" AS row
-MATCH (employee:Employee {EmployeeID: row.EmployeeID})
-MATCH (manager:Employee {EmployeeID: row.ReportsTo})
-MERGE (employee)-[:REPORTS_TO]->(manager);
-```
-
-```
-CREATE INDEX ON :Order(OrderId);
-```
+* link:data/import/indexes.cql[Indexes]
+* link:data/import/relationships.cql[Relationships]

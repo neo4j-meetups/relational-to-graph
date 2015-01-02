@@ -3,4 +3,7 @@ CREATE INDEX ON :Category(CategoryID);
 CREATE INDEX ON :Employee(EmployeeID);
 CREATE INDEX ON :Supplier(SupplierID);
 CREATE INDEX ON :Customer(CustomerID);
-CREATE INDEX ON :Order(OrderId);
+CREATE INDEX ON :Order(OrderID);
+CREATE INDEX ON :Region(RegionID);
+CREATE INDEX ON :Supplier(CompanyName);
+CREATE INDEX ON :Territory(TerritoryID);

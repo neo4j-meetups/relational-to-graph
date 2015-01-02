@@ -3,5 +3,96 @@
 == Importing Northwind into Postgres SQL
 
 ```
-psql --user postgres < data/northwind.postgre.sql
+createdb -u postgres london.meetup
+psql -U postgres -d london.meetup < data/northwind.postgre.sql
+```
+
+View the data using pgadmin
+```
+http://www.postgresql.org/ftp/pgadmin3/release/v1.20.0/osx/
+```
+
+== View the ER diagram
+
+* Print this out and give people a copy of it when we get to this point
+* How do we generate this from pgadmin?
+
+
+== Export the data
+
+
+```
+COPY (SELECT * FROM customers) TO '/tmp/customers.csv' WITH CSV header;
+COPY (SELECT * FROM suppliers) TO '/tmp/suppliers.csv' WITH CSV header;
+COPY (SELECT * FROM products)  TO '/tmp/products.csv' WITH CSV header;
+COPY (SELECT * FROM employees) TO '/tmp/employees.csv' WITH CSV header;
+COPY (SELECT * FROM categories) TO '/tmp/categories.csv' WITH CSV header;
+
+COPY (SELECT * FROM orders
+      LEFT OUTER JOIN order_details ON order_details."OrderID" = orders."OrderID") TO '/tmp/orders.csv' WITH CSV header;
+```
+
+== Import the data
+
+```
+# Create customers
+LOAD CSV WITH HEADERS FROM "file:/tmp/customers.csv" AS row
+CREATE (:Customer {CompanyName: row.CompanyName, CustomerID: row.CustomerID, Fax: row.Fax, Phone: row.Phone});
+
+# Create products
+LOAD CSV WITH HEADERS FROM "file:/tmp/products.csv" AS row
+CREATE (:Product {ProductName: row.ProductName, ProductID: row.ProductID, UnitPrice: row.UnitPrice});
+
+# Create suppliers
+LOAD CSV WITH HEADERS FROM "file:/tmp/suppliers.csv" AS row
+CREATE (:Supplier {CompanyName: row.CompanyName, SupplierID: row.SupplierID});
+
+# Create employees
+LOAD CSV WITH HEADERS FROM "file:/tmp/employees.csv" AS row
+CREATE (:Employee {EmployeeID:row.EmployeeID,  FirstName: row.FirstName, LastName: row.LastName, Title: row.Title});
+
+# Create categories
+LOAD CSV WITH HEADERS FROM "file:/tmp/categories.csv" AS row
+CREATE (:Category {CategoryID: row.CategoryID, CategoryName: row.CategoryName, Description: row.Description});
+```
+
+```
+CREATE INDEX ON :Product(ProductID);
+CREATE INDEX ON :Category(CategoryID);
+CREATE INDEX ON :Employee(EmployeeID);
+CREATE INDEX ON :Supplier(SupplierID);
+CREATE INDEX ON :Customer(CustomerID);
+```
+
+```
+LOAD CSV WITH HEADERS FROM "file:/tmp/orders.csv" AS row
+CREATE (order:Order {OrderID: row.OrderID, ShipName: row.ShipName})
+
+WITH *
+MATCH (product:Product {ProductID: row.ProductID})
+MATCH (employee:Employee {EmployeeID: row.EmployeeID})
+
+MERGE (employee)-[:SOLD]->(order)
+MERGE (order)-[:PRODUCT]->(product);
+```
+
+```
+LOAD CSV WITH HEADERS FROM "file:/tmp/products.csv" AS row
+MATCH (product:Product {ProductID: row.ProductID})
+MATCH (supplier:Supplier {SupplierID: row.SupplierID})
+MATCH (category:Category {CategoryID: row.CategoryID})
+
+MERGE (supplier)-[:SUPPLIES]->(product)
+MERGE (product)-[:PART_OF]->(category);
+```
+
+```
+LOAD CSV WITH HEADERS FROM "file:/tmp/employees.csv" AS row
+MATCH (employee:Employee {EmployeeID: row.EmployeeID})
+MATCH (manager:Employee {EmployeeID: row.ReportsTo})
+MERGE (employee)-[:REPORTS_TO]->(manager);
+```
+
+```
+CREATE INDEX ON :Order(OrderId);
 ```

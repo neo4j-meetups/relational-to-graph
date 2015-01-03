@@ -16,10 +16,18 @@ You can then browse the data using link:http://www.postgresql.org/ftp/pgadmin3/r
 
 == Export the data
 
-* link:data/export/export-from-postgres.sql[Export from Postgres]
+* `psql -U postgres -d london.meetup < data/data/export/export-from-postgres.sql` link:data/export/export-from-postgres.sql[Export to CSV]
 
 == Import the data
 
-* link:data/import/nodes.cql[Nodes]
-* link:data/import/indexes.cql[Indexes]
-* link:data/import/relationships.cql[Relationships]
+http://neo4j.com/download[Download], unzip and start Neo4j-Server with `bin/neo4j start`
+
+Then use `bin/neo4j-shell` to run your cypher-import scripts, it automatically connects to a running server.
+
+You can either copy & paste the provided scripts or run the neo4j-shell command with each script as an input file.
+
+* `bin/neo4j-shell -file data/import/nodes.cql` link:data/import/nodes.cql[Nodes]
+* `bin/neo4j-shell -file data/import/indexes.cql` link:data/import/indexes.cql[Indexes]
+* `bin/neo4j-shell -file data/import/relationships.cql` link:data/import/relationships.cql[Relationships]
+
+(Alternatively you can provide a custom database location instead, e.g `-path northwind.db`, that you later have to point your server to)

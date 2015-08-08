@@ -8,7 +8,7 @@ import it into Neo4j and write some queries against it
 We'll use the classic link:https://code.google.com/p/northwindextended/downloads/detail?name=northwind.postgre.sql[Northwind dataset] as our example
 
 ```
-createdb -u postgres london.meetup
+createdb -U postgres london.meetup
 psql -U postgres -d london.meetup < data/northwind.postgre.sql
 ```
 

@@ -1,4 +1,5 @@
 CREATE INDEX ON :Product(ProductID);
+CREATE INDEX ON :Product(ProductName);
 CREATE INDEX ON :Category(CategoryID);
 CREATE INDEX ON :Employee(EmployeeID);
 CREATE INDEX ON :Supplier(SupplierID);

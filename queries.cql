@@ -11,7 +11,7 @@ RETURN e.EmployeeID AS bigBoss
 MATCH (e:Employee)
 OPTIONAL MATCH (e)<-[:REPORTS_TO*]-(report)
 WITH e.EmployeeID AS employee, COLLECT(report) AS reports
-RETURN employee, LENGTH(reports) AS numberOfReports
+RETURN employee, SIZE(reports) AS numberOfReports
 
 // Find all the sales made by someone directly or indirectly
 
@@ -23,7 +23,7 @@ ORDER BY totalOrders DESC
 // Which regions does a supplier supply to?
 
 MATCH (supplier:Supplier {SupplierID: "19"})-[:SUPPLIES]->
-(product)<-[:PRODUCT]-(order)<-[:SOLD]-
-(employee)-[:IN_TERRITORY]->(territory)-[:IN_REGION]->
+(product)<-[:INCLUDES]-(order)<-[:SOLD]-
+(employee)-[:REPRESENTS]->(territory)-[:IS_IN]->
 (region)
 RETURN region.RegionDescription, COUNT(*) AS orders

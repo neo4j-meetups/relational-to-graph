@@ -44,7 +44,7 @@ GROUP BY manager;
 
 MATCH (e:Employee)<-[:REPORTS_TO]-(report)
 WITH e.EmployeeID AS employee, COLLECT(report) AS reports
-RETURN employee, LENGTH(reports) AS numberOfReports
+RETURN employee, SIZE(reports) AS numberOfReports
 
 // number of direct reports (including none)
 SELECT manager."EmployeeID" AS manager, COUNT(e."EmployeeID")
